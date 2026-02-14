@@ -60,10 +60,14 @@ jobs:
       - name: Login to Amazon ECR
         uses: aws-actions/amazon-ecr-login@v1
 
-      - name: Restart container
+            - name: Restart container
         run: |
-          docker stop networksecurity || true
-          docker rm networksecurity || true
+          set +e
+
+          docker stop networksecurity
+          docker rm networksecurity
+
+          set -e
 
           docker pull 963912059120.dkr.ecr.eu-north-1.amazonaws.com/networksecurity:latest
 
@@ -72,6 +76,7 @@ jobs:
             --name networksecurity \
             -p 8000:8000 \
             963912059120.dkr.ecr.eu-north-1.amazonaws.com/networksecurity:latest
+
 
       - name: Cleanup
         run: docker system prune -af
